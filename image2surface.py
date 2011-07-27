@@ -56,12 +56,13 @@ def create_scad(datfilename, filename, removebase, width, height, maxdim):
 	else:
 		scale = [(maxdim*float(width)/height)/width, float(maxdim)/height, 1]
 	scadfilename = filename if filename[-5:] == '.scad' else 'temp_image2surface.scad'
+	baseheight = 2
 	f = open(scadfilename, 'w')
 	if removebase:
-		f.write('difference() {\n\t')
+		f.write('translate([0, 0, -baseheight]);\ndifference() {\n\t')
 	f.write('scale('+repr(scale)+') translate([0, 0, 1]) surface("'+datfilename+'", center=true, convexity=5);')
 	if removebase:
-		f.write('\n\tcube(['+repr(scale[0]*width)+', '+repr(scale[1]*height)+', 2], center=true);\n}')
+		f.write('\n\tcube(['+repr(scale[0]*width)+', '+repr(scale[1]*height)+', baseheight], center=true);\n}')
 	f.close()
 	print 'SCAD file is '+scadfilename
 	return scadfilename
